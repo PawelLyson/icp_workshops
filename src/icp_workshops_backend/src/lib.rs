@@ -5,15 +5,15 @@ use std::cell::RefCell;
 use std::borrow::Borrow;
 
 thread_local! {
-    static MSG: RefCell<String> = RefCell::new(String::new());
+    static MSG: RefCell<Vec<String>> = RefCell::new(Vec::new());
 }
 #[ic_cdk::update]
-fn set_name(name: String) {
-    MSG.with(|msg| *msg.borrow_mut()=name);
+fn send_msg(in_msg: String) {
+    MSG.with(|msg| msg.borrow_mut().push(in_msg));
 }
 
 #[ic_cdk::query]
-fn get_name() -> String {
+fn get_chat() -> Vec<String> {
     MSG.with(|msg| (*msg.borrow()).clone())
 }
 
